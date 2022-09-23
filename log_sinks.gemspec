@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rake'
-
 require_relative './lib/log_sinks/version'
 
 Gem::Specification.new do |spec|
@@ -17,7 +15,7 @@ Gem::Specification.new do |spec|
     'rubygems_mfa_required' => 'true'
   }
 
-  spec.files = FileList['lib/**/*.rb'].to_a
+  spec.files = Dir.glob('{bin,lib}/**/*') + %w[LICENSE README.md]
 
   spec.add_development_dependency 'code-scanning-rubocop'
   spec.add_development_dependency 'debug'
