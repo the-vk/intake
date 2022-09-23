@@ -1,0 +1,11 @@
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.0
+
+Naming/FileName:
+  Exclude:
+    - Rakefile
+
+Style/BlockComments:
+  Exclude:
+    - 'spec/spec_helper.rb'
