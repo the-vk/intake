@@ -46,22 +46,26 @@ module LogSinks
     %i[debug info warn error fatal].each do |level|
       code = <<-CODE
         undef :#{level} if method_defined? :#{level}
-        def #{level}(msg = nil, meta: nil, error: nil)
-          log_event(::LogSinks::Level[:#{level}], msg, meta: meta, error: error)
+        def #{level}(msg = nil, meta: nil, error: nil, &block)
+          log_event(::LogSinks::Level[:#{level}], msg, meta: meta, error: error, &block)
         end
       CODE
       class_eval(code)
     end
 
     def log_event(level, msg = nil, meta: nil, error: nil)
-      return false unless level? level
-      return false if @sinks.empty?
+      return false if @sinks.empty? || !level?(level)
 
-      unless error.nil?
-        meta ||= {}
-        meta[:error] = error
-      end
+      msg = yield if msg.nil? && block_given?
+      meta ||= {}
+      meta[:error] = error unless error.nil?
       event = ::LogSinks::LogEvent.new(Time.now, level, msg, meta: meta)
+      dispatch_event event
+    end
+
+    private
+
+    def dispatch_event(event)
       @sinks.each do |s|
         s.receive(event)
       end
