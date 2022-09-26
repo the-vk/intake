@@ -43,24 +43,14 @@ module LogSinks
                end
     end
 
-    def debug(msg = nil, meta: nil, error: nil)
-      log_event(::LogSinks::Level[:debug], msg, meta: meta, error: error)
-    end
-
-    def info(msg = nil, meta: nil, error: nil)
-      log_event(::LogSinks::Level[:info], msg, meta: meta, error: error)
-    end
-
-    def warn(msg = nil, meta: nil, error: nil)
-      log_event(::LogSinks::Level[:warn], msg, meta: meta, error: error)
-    end
-
-    def error(msg = nil, meta: nil, error: nil)
-      log_event(::LogSinks::Level[:error], msg, meta: meta, error: error)
-    end
-
-    def fatal(msg = nil, meta: nil, error: nil)
-      log_event(::LogSinks::Level[:fatal], msg, meta: meta, error: error)
+    %i[debug info warn error fatal].each do |level|
+      code = <<-CODE
+        undef :#{level} if method_defined? :#{level}
+        def #{level}(msg = nil, meta: nil, error: nil)
+          log_event(::LogSinks::Level[:#{level}], msg, meta: meta, error: error)
+        end
+      CODE
+      class_eval(code)
     end
 
     def log_event(level, msg = nil, meta: nil, error: nil)
