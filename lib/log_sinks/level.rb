@@ -29,20 +29,4 @@ module LogSinks
   [[:debug, 1000], [:info, 2000], [:warn, 3000], [:error, 4000], [:fatal, 5000]].each do |(n, v)|
     ::LogSinks::Level[n] = ::LogSinks::Level.new(n, v).freeze
   end
-
-  begin
-    # Define Logger levels
-    [
-      [::Logger::DEBUG, ::LogSinks::Level[:debug]],
-      [::Logger::INFO, ::LogSinks::Level[:info]],
-      [::Logger::WARN, ::LogSinks::Level[:warn]],
-      [::Logger::ERROR, ::LogSinks::Level[:error]],
-      [::Logger::FATAL, ::LogSinks::Level[:fatal]],
-      [::Logger::UNKNOWN, ::LogSinks::Level[:fatal]]
-    ].each do |(n, v)|
-      ::LogSinks::Level[n] = v
-    end
-  rescue NameError
-    # logger module is not loaded. ignore
-  end
 end
