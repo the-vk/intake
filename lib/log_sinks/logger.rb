@@ -46,8 +46,10 @@ module LogSinks
     %i[debug info warn error fatal].each do |level|
       code = <<-CODE
         undef :#{level} if method_defined? :#{level}
+        LEVEL_#{level} = ::LogSinks::Level[:#{level}]
+
         def #{level}(msg = nil, meta: nil, error: nil, &block)
-          log_event(::LogSinks::Level[:#{level}], msg, meta: meta, error: error, &block)
+          log_event(LEVEL_#{level}, msg, meta: meta, error: error, &block)
         end
       CODE
       class_eval(code)

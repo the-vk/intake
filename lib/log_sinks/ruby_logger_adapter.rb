@@ -2,57 +2,13 @@
 
 require 'logger'
 
+require_relative 'level'
 require_relative 'logger'
 
 module LogSinks
   class Logger
     def as_ruby_logger(progname: nil)
       RubyLoggerAdapter.new(self, progname)
-    end
-  end
-
-  class RubyLoggerAdapter
-    def initialize(logger, progname)
-      @progname = progname
-      @logger = logger
-    end
-
-    def add(severity, message = nil, progname = nil, &block)
-      progname = @progname if progname.nil?
-
-      if message.nil?
-        if block.nil?
-          message = progname
-          progname = @progname
-        else
-          message = block.call
-        end
-      end
-      @logger.log_event(::LogSinks::Level[severity], message, meta: { progname: progname }, &block)
-    end
-
-    def debug(progname = nil, &block)
-      add(::Logger::Severity::DEBUG, nil, progname, &block)
-    end
-
-    def info(progname = nil, &block)
-      add(::Logger::Severity::INFO, nil, progname, &block)
-    end
-
-    def warn(progname = nil, &block)
-      add(::Logger::Severity::WARN, nil, progname, &block)
-    end
-
-    def error(progname = nil, &block)
-      add(::Logger::Severity::ERROR, nil, progname, &block)
-    end
-
-    def fatal(progname = nil, &block)
-      add(::Logger::Severity::FATAL, nil, progname, &block)
-    end
-
-    def unknown(progname = nil, &block)
-      add(::Logger::Severity::FATAL, nil, progname, &block)
     end
   end
 
@@ -65,5 +21,49 @@ module LogSinks
     [::Logger::UNKNOWN, ::LogSinks::Level[:fatal]]
   ].each do |(n, v)|
     ::LogSinks::Level[n] = v
+  end
+
+  class RubyLoggerAdapter
+    %i[DEBUG INFO WARN ERROR FATAL UNKNOWN].each do |l|
+      code = <<-CODE
+        LEVEL_#{l} = ::LogSinks::Level[::Logger::Severity::#{l}]
+
+        def #{l.downcase}(progname = nil, &block)
+          log_event(LEVEL_#{l}, nil, progname, &block)
+        end
+      CODE
+      class_eval(code)
+    end
+
+    def unknown(progname = nil, &block)
+      add(LEVEL_UNKNOWN, nil, progname, &block)
+    end
+
+    def initialize(logger, progname)
+      @progname = progname
+      @logger = logger
+    end
+
+    def add(severity, message = nil, progname = nil, &block)
+      severity = ::LogSinks::Level[severity] unless severity.is_a? ::LogSinks::Level
+      log_event(severity, message, progname, &block)
+    end
+
+    private
+
+    def log_event(severity, message, progname, &block)
+      progname = @progname if progname.nil?
+
+      if message.nil?
+        if block.nil?
+          message = progname
+          progname = @progname
+        else
+          message = block.call
+        end
+      end
+      # @logger.log_event(severity, message, meta: { progname: progname }, &block)
+      @logger.log_event(severity, message, meta: nil, &block)
+    end
   end
 end
