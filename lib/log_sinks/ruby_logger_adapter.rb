@@ -42,6 +42,7 @@ module LogSinks
     def initialize(logger, progname)
       @progname = progname
       @logger = logger
+      @meta = { progname: @progname }
     end
 
     def add(severity, message = nil, progname = nil, &block)
@@ -52,18 +53,18 @@ module LogSinks
     private
 
     def log_event(severity, message, progname, &block)
+      return true unless @logger.level?(severity)
+
       progname = @progname if progname.nil?
 
-      if message.nil?
-        if block.nil?
-          message = progname
-          progname = @progname
-        else
-          message = block.call
-        end
+      if message.nil? && block.nil?
+        message = progname
+        progname = @progname
       end
-      # @logger.log_event(severity, message, meta: { progname: progname }, &block)
-      @logger.log_event(severity, message, meta: nil, &block)
+
+      meta = progname == @progname ? @meta : { progname: progname }
+      @logger.log_event(severity, message, meta: meta, &block)
+      true
     end
   end
 end
