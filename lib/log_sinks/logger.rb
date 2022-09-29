@@ -5,6 +5,7 @@ require 'time'
 require_relative 'event_drain'
 require_relative 'level'
 require_relative 'log_event'
+require_relative 'mdc'
 require_relative 'repository'
 
 module LogSinks
@@ -25,7 +26,6 @@ module LogSinks
 
       @name = name
       @level = ::LogSinks::Level[:info]
-      @parent = nil
     end
 
     def level?(level)
@@ -57,6 +57,7 @@ module LogSinks
       msg = yield if msg.nil? && block_given?
       meta ||= {}
       meta[:error] = error unless error.nil?
+      meta.merge!(MDC.items)
       event = ::LogSinks::LogEvent.new(Time.now, level, @name, msg, meta: meta)
       dispatch_event event
     end
