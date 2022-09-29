@@ -23,10 +23,30 @@ module LogSinks
     def to_s
       @name.to_s.upcase
     end
-  end
 
-  # Define LogSinks levels
-  [[:debug, 1000], [:info, 2000], [:warn, 3000], [:error, 4000], [:fatal, 5000]].each do |(n, v)|
-    ::LogSinks::Level[n] = ::LogSinks::Level.new(n, v).freeze
+    def <(other)
+      @val < other.val
+    end
+
+    def <=(other)
+      @val <= other.val
+    end
+
+    def >(other)
+      @val > other.val
+    end
+
+    def >=(other)
+      @val >= other.val
+    end
+
+    def ==(other)
+      @val == other.val
+    end
+
+    # Define LogSinks levels
+    [[:debug, 1000], [:info, 2000], [:warn, 3000], [:error, 4000], [:fatal, 5000]].each do |(n, v)|
+      ::LogSinks::Level[n] = ::LogSinks::Level.new(n, v).freeze
+    end
   end
 end

@@ -2,11 +2,13 @@
 
 require 'time'
 
+require_relative 'event_drain'
 require_relative 'level'
 require_relative 'log_event'
 require_relative 'repository'
 
 module LogSinks
+  # Logger is a object that captures log event and forward that to event sinks.
   class Logger
     class << self
       def [](name)
@@ -16,20 +18,14 @@ module LogSinks
       end
     end
 
+    attr_reader :name
+
     def initialize(name)
-      case name
-      when String
-        raise ArgumentError, 'logger name must not be empty' if name.empty?
-      else
-        raise ArgumentError, 'logger name must be a string'
-      end
+      validate_name(name)
 
+      @name = name
       @level = ::LogSinks::Level[:info]
-      @sinks = []
-    end
-
-    def add_sink(sink)
-      @sinks.push sink
+      @parent = nil
     end
 
     def level?(level)
@@ -56,21 +52,28 @@ module LogSinks
     end
 
     def log_event(level, msg = nil, meta: nil, error: nil)
-      return false if @sinks.empty? || !level?(level)
+      return false unless level?(level)
 
       msg = yield if msg.nil? && block_given?
       meta ||= {}
       meta[:error] = error unless error.nil?
-      event = ::LogSinks::LogEvent.new(Time.now, level, msg, meta: meta)
+      event = ::LogSinks::LogEvent.new(Time.now, level, @name, msg, meta: meta)
       dispatch_event event
     end
 
     private
 
-    def dispatch_event(event)
-      @sinks.each do |s|
-        s.receive(event)
+    def validate_name(name)
+      case name
+      when String
+        raise ArgumentError, 'logger name must not be empty' if name.empty?
+      else
+        raise ArgumentError, 'logger name must be a string'
       end
+    end
+
+    def dispatch_event(event)
+      EventDrain.instance.drain(event)
     end
   end
 end
