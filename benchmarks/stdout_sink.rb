@@ -7,7 +7,7 @@ require_relative '../lib/log_sinks/ruby_logger_adapter'
 
 log = LogSinks::Logger[:root]
 log.level = :error
-log.add_sink(LogSinks::IOSink.new($stdout))
+LogSinks::EventDrain.instance.add_sink(LogSinks::IOSink.new($stdout))
 ruby_logger = log.as_ruby_logger
 
 ITERATIONS = 1000

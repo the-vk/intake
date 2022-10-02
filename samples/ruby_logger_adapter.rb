@@ -4,7 +4,7 @@ require_relative '../lib/log_sinks'
 require_relative '../lib/log_sinks/ruby_logger_adapter'
 
 log = LogSinks::Logger[:root]
-log.add_sink LogSinks::IOSink.new($stdout)
+LogSinks::EventDrain.instance.add_sink LogSinks::IOSink.new($stdout)
 log.level = :debug
 log = log.as_ruby_logger
 
