@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'concurrent-ruby', '~> 1.1.0'
   spec.add_runtime_dependency 'concurrent-ruby-ext', '~> 1.1.0'
-  spec.add_development_dependency 'immutable-ruby', '~> 0.1.0'
+  spec.add_runtime_dependency 'immutable-ruby', '~> 0.1.0'
 
   spec.add_development_dependency 'code-scanning-rubocop', '~> 0.6.0'
   spec.add_development_dependency 'debug', '~> 1.6.0'
