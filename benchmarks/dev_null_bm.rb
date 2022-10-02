@@ -10,7 +10,7 @@ LogSinks::EventDrain.instance.add_sink(LogSinks::IOSink.new(File.new('/dev/null'
 
 ITERATIONS = 1_000_000
 Benchmark.benchmark(Benchmark::CAPTION, 25, Benchmark::FORMAT, '>avg:') do |x|
-  r = x.item(:dev_null_same_thread) do
+  r = x.item(:dev_null) do
     ITERATIONS.times do
       log.error 'message'
     end

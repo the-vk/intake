@@ -16,7 +16,7 @@ module LogSinks
     end
 
     def drain(event)
-      @sinks.each { |s| s.drain(event) }
+      @sinks.each { |s| s.receive(event) }
     end
 
     def clear_sinks

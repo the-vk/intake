@@ -16,7 +16,7 @@ RSpec.describe LogSinks::IOSink do
     io_stream = StringIO.new
     sink = LogSinks::IOSink.new(io_stream)
     sink.formatter = ->(_) { 'message received' }
-    sink.drain(event)
+    sink.receive(event)
     expect(io_stream.string).to eq 'message received'
   end
 end

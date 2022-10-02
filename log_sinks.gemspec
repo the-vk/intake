@@ -17,9 +17,14 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir.glob('{bin,lib}/**/*') + %w[LICENSE README.md]
 
+  spec.add_runtime_dependency 'concurrent-ruby', '~> 1.1'
+  spec.add_runtime_dependency 'concurrent-ruby-ext', '~> 1.1'
+  spec.add_development_dependency 'immutable-ruby', '~> 0.1'
+
   spec.add_development_dependency 'code-scanning-rubocop'
   spec.add_development_dependency 'debug'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'simplecov'
 end

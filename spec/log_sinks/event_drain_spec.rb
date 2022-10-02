@@ -11,7 +11,7 @@ RSpec.describe LogSinks::EventDrain do
   it '#drain forwards event to sinks' do
     event = LogSinks::LogEvent.new(Time.now, LogSinks::Level[:info], 'test_logger', 'msg')
     sink = double(:sink)
-    expect(sink).to receive(:drain).with(event)
+    expect(sink).to receive(:receive).with(event)
 
     event_drain = LogSinks::EventDrain.instance
     event_drain.add_sink(sink)
