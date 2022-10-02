@@ -17,7 +17,9 @@ Benchmark.benchmark(Benchmark::CAPTION, 25, Benchmark::FORMAT, '>same thread avg
     end
   end
   LogSinks::EventDrain.instance.clear_sinks
-  LogSinks::EventDrain.instance.add_sink(LogSinks::IOSink.new(File.new('/dev/null', 'a'), thread_model: :dedicated_thread))
+  output_stream = File.new('/dev/null', 'a')
+  dedicated_thread_sink = LogSinks::IOSink.new(output_stream, pump_class: LogSinks::Pumps::DedicatedThreadPump)
+  LogSinks::EventDrain.instance.add_sink dedicated_thread_sink
   r2 = x.item(:dev_null_dedicated_thread) do
     ITERATIONS.times do
       log.error 'message'

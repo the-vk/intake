@@ -4,7 +4,7 @@ require_relative '../lib/log_sinks'
 
 log = LogSinks::Logger[:root]
 log.level = :info
-LogSinks::EventDrain.instance.add_sink LogSinks::IOSink.new($stdout, thread_model: :dedicated_thread)
+LogSinks::EventDrain.instance.add_sink LogSinks::IOSink.new($stdout, pump_class: LogSinks::Pumps::DedicatedThreadPump)
 
 log.debug 'debug message'
 log.debug { 'proc debug message' }
