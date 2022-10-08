@@ -3,28 +3,14 @@
 module LogSinks
   # Represents a log event.
   class LogEvent
+    attr_reader :timestamp, :level, :logger_name, :message, :data
+
     def initialize(timestamp, level, logger_name, msg, meta: nil)
-      @data = meta || {}
-      @data[:timestamp] = timestamp
-      @data[:level] = level
-      @data[:logger_name] = logger_name
-      @data[:message] = msg
-    end
-
-    def timestamp
-      self[:timestamp]
-    end
-
-    def level
-      self[:level]
-    end
-
-    def logger_name
-      self[:logger_name]
-    end
-
-    def message
-      self[:message]
+      @data = (meta || {}).freeze
+      @timestamp = timestamp
+      @level = level
+      @logger_name = logger_name
+      @message = msg
     end
 
     def [](key)
