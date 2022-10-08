@@ -57,7 +57,7 @@ module LogSinks
       msg = yield if msg.nil? && block_given?
       meta ||= {}
       meta[:error] = error unless error.nil?
-      meta.merge!(MDC.items)
+      meta.merge!(MDC.items) if MDC.any?
       event = ::LogSinks::LogEvent.new(Time.now, level, @name, msg, meta: meta)
       dispatch_event event
     end

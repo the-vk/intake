@@ -19,6 +19,10 @@ module LogSinks
         MDC[key] = value
       end
 
+      def any?
+        context.any?
+      end
+
       def items
         context.dup.freeze
       end
