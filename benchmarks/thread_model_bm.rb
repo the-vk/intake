@@ -18,7 +18,7 @@ Benchmark.benchmark(Benchmark::CAPTION, 25, Benchmark::FORMAT, '>same thread avg
   end
   Intake.clear_sinks
   output_stream = File.new('/dev/null', 'a')
-  dedicated_thread_sink = Intake::IOSink.new(output_stream, pump_class: Intake::Pumps::DedicatedThreadPump)
+  dedicated_thread_sink = Intake::AsyncSink.new(Intake::IOSink.new(output_stream))
   Intake.add_sink dedicated_thread_sink
   r2 = x.item(:dev_null_dedicated_thread) do
     ITERATIONS.times do
