@@ -4,9 +4,9 @@ require 'benchmark'
 
 require_relative '../lib/intake'
 
-log = Intake::Logger[:root]
+log = Intake[:root]
 log.level = :error
-Intake::EventDrain.instance.add_sink(Intake::IOSink.new(File.new('/dev/null', 'a')))
+Intake.add_sink(Intake::IOSink.new(File.new('/dev/null', 'a')))
 
 ITERATIONS = 1_000_000
 Benchmark.benchmark(Benchmark::CAPTION, 25, Benchmark::FORMAT, '>avg:') do |x|

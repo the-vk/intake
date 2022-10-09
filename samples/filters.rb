@@ -2,11 +2,11 @@
 
 require_relative '../lib/intake'
 
-log = Intake::Logger[:root]
+log = Intake[:root]
 log.level = :info
 sink = Intake::IOSink.new($stdout)
 sink.add_filter Intake::Filters::LevelFilter.new(:info)
-Intake::EventDrain.instance.add_sink sink
+Intake.add_sink sink
 
 log.debug 'debug message'
 log.debug { 'proc debug message' }
@@ -27,5 +27,5 @@ sink.add_filter Intake::Filters::LoggerNamePrefixFilter.new('Prog::Main', includ
 
 log.info 'root logger event is skipped'
 
-Intake::Logger['Prog::Main::Feature'].warn 'Prog::Main::Feature messages are logged'
-Intake::Logger['Prog::Component'].fatal 'Prog::Component logs are ignored'
+Intake['Prog::Main::Feature'].warn 'Prog::Main::Feature messages are logged'
+Intake['Prog::Component'].fatal 'Prog::Component logs are ignored'

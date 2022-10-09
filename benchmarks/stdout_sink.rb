@@ -5,9 +5,9 @@ require 'benchmark'
 require_relative '../lib/intake'
 require_relative '../lib/intake/ruby_logger_adapter'
 
-log = Intake::Logger[:root]
+log = Intake[:root]
 log.level = :error
-Intake::EventDrain.instance.add_sink(Intake::IOSink.new($stdout))
+Intake.add_sink(Intake::IOSink.new($stdout))
 ruby_logger = log.as_ruby_logger
 
 ITERATIONS = 1000

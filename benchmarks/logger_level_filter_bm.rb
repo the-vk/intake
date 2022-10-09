@@ -5,7 +5,7 @@ require 'benchmark'
 require_relative '../lib/intake'
 require_relative '../lib/intake/ruby_logger_adapter'
 
-log = Intake::Logger[:root]
+log = Intake[:root]
 log.level = :error
 ruby_logger = log.as_ruby_logger
 

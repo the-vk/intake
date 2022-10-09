@@ -3,8 +3,8 @@
 require_relative '../lib/intake'
 require_relative '../lib/intake/ruby_logger_adapter'
 
-log = Intake::Logger[:root]
-Intake::EventDrain.instance.add_sink Intake::IOSink.new($stdout)
+log = Intake[:root]
+Intake.add_sink Intake::IOSink.new($stdout)
 log.level = :debug
 log = log.as_ruby_logger
 
@@ -19,7 +19,7 @@ log.unknown 'unknown'
 
 log.warn { 'warn proc message' }
 
-log = Intake::Logger[:root].as_ruby_logger(progname: 'sample')
+log = Intake[:root].as_ruby_logger(progname: 'sample')
 
 log.debug 'debug'
 log.info 'info'

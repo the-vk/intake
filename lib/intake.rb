@@ -7,3 +7,17 @@ require_relative 'intake/pumps/dedicated_thread_pump'
 require_relative 'intake/version'
 require_relative 'intake/filters/level_filter'
 require_relative 'intake/filters/logger_name_prefix_filter'
+
+module Intake
+  def self.[](logger_name)
+    Intake::Logger[logger_name]
+  end
+
+  def self.add_sink(sink)
+    Intake::EventDrain.instance.add_sink sink
+  end
+
+  def self.clear_sinks
+    Intake::EventDrain.instance.clear_sinks
+  end
+end

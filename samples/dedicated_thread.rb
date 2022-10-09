@@ -2,9 +2,9 @@
 
 require_relative '../lib/intake'
 
-log = Intake::Logger[:root]
+log = Intake[:root]
 log.level = :info
-Intake::EventDrain.instance.add_sink Intake::IOSink.new($stdout, pump_class: Intake::Pumps::DedicatedThreadPump)
+Intake.add_sink Intake::IOSink.new($stdout, pump_class: Intake::Pumps::DedicatedThreadPump)
 
 log.debug 'debug message'
 log.debug { 'proc debug message' }

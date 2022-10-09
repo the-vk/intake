@@ -2,11 +2,11 @@
 
 require_relative '../lib/intake'
 
-log = Intake::Logger[:root]
+log = Intake[:root]
 log.level = :info
 sink = Intake::IOSink.new($stdout)
 sink.formatter = ->(e) { "#{e.timestamp} [#{e[:correlation_id]}] - #{e.logger_name}: - #{e.message}\n" }
-Intake::EventDrain.instance.add_sink sink
+Intake.add_sink sink
 
 log.info 'a message'
 
