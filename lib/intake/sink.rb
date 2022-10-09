@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 require_relative 'filter'
-require_relative 'pumps/in_thread_pump'
 
 module Intake
   # Sink receives log event and writes to a permanent storage.
   class Sink
-    def initialize(pump_class: Intake::Pumps::InThreadPump)
+    def initialize
       @filters = []
-      @pump = pump_class.new(self)
     end
 
     def flush
@@ -18,7 +16,7 @@ module Intake
     def receive(event)
       return unless accept_event?(event)
 
-      @pump.receive event
+      drain event
     end
 
     def add_filter(filter)
