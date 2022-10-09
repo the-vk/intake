@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative '../lib/log_sinks'
+require_relative '../lib/intake'
 
-log = LogSinks::Logger[:root]
+log = Intake::Logger[:root]
 log.level = :info
-sink = LogSinks::IOSink.new($stdout)
-sink.add_filter LogSinks::Filters::LevelFilter.new(:info)
-LogSinks::EventDrain.instance.add_sink sink
+sink = Intake::IOSink.new($stdout)
+sink.add_filter Intake::Filters::LevelFilter.new(:info)
+Intake::EventDrain.instance.add_sink sink
 
 log.debug 'debug message'
 log.debug { 'proc debug message' }
@@ -23,9 +23,9 @@ log.error { 'proc error message' }
 log.fatal 'fatal message'
 log.fatal { 'proc fatal message' }
 
-sink.add_filter LogSinks::Filters::LoggerNamePrefixFilter.new('Prog::Main', include_root: false)
+sink.add_filter Intake::Filters::LoggerNamePrefixFilter.new('Prog::Main', include_root: false)
 
 log.info 'root logger event is skipped'
 
-LogSinks::Logger['Prog::Main::Feature'].warn 'Prog::Main::Feature messages are logged'
-LogSinks::Logger['Prog::Component'].fatal 'Prog::Component logs are ignored'
+Intake::Logger['Prog::Main::Feature'].warn 'Prog::Main::Feature messages are logged'
+Intake::Logger['Prog::Component'].fatal 'Prog::Component logs are ignored'

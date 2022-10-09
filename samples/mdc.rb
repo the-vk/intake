@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-require_relative '../lib/log_sinks'
+require_relative '../lib/intake'
 
-log = LogSinks::Logger[:root]
+log = Intake::Logger[:root]
 log.level = :info
-sink = LogSinks::IOSink.new($stdout)
+sink = Intake::IOSink.new($stdout)
 sink.formatter = ->(e) { "#{e.timestamp} [#{e[:correlation_id]}] - #{e.logger_name}: - #{e.message}\n" }
-LogSinks::EventDrain.instance.add_sink sink
+Intake::EventDrain.instance.add_sink sink
 
 log.info 'a message'
 
-LogSinks::MDC[:correlation_id] = :abc
+Intake::MDC[:correlation_id] = :abc
 
 log.info 'message with MDC'
 
-LogSinks::MDC.clear(:correlation_id)
+Intake::MDC.clear(:correlation_id)
 
 log.info 'a message with no MDC'

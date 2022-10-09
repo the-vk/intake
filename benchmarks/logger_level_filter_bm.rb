@@ -2,10 +2,10 @@
 
 require 'benchmark'
 
-require_relative '../lib/log_sinks'
-require_relative '../lib/log_sinks/ruby_logger_adapter'
+require_relative '../lib/intake'
+require_relative '../lib/intake/ruby_logger_adapter'
 
-log = LogSinks::Logger[:root]
+log = Intake::Logger[:root]
 log.level = :error
 ruby_logger = log.as_ruby_logger
 

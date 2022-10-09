@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative '../lib/log_sinks'
+require_relative '../lib/intake'
 
-log = LogSinks::Logger[:root]
+log = Intake::Logger[:root]
 log.level = :info
-LogSinks::EventDrain.instance.add_sink LogSinks::IOSink.new($stdout, pump_class: LogSinks::Pumps::DedicatedThreadPump)
+Intake::EventDrain.instance.add_sink Intake::IOSink.new($stdout, pump_class: Intake::Pumps::DedicatedThreadPump)
 
 log.debug 'debug message'
 log.debug { 'proc debug message' }

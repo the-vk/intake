@@ -2,11 +2,11 @@
 
 require 'benchmark'
 
-require_relative '../lib/log_sinks'
+require_relative '../lib/intake'
 
-log = LogSinks::Logger[:root]
+log = Intake::Logger[:root]
 log.level = :error
-LogSinks::EventDrain.instance.add_sink(LogSinks::IOSink.new(File.new('/dev/null', 'a')))
+Intake::EventDrain.instance.add_sink(Intake::IOSink.new(File.new('/dev/null', 'a')))
 
 ITERATIONS = 1_000_000
 Benchmark.benchmark(Benchmark::CAPTION, 25, Benchmark::FORMAT, '>avg:') do |x|

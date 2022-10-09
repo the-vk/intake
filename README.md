@@ -1,8 +1,8 @@
-# log_sinks
+# intake
 
 ## Description
 
-**log_sinks** is a powerful yet easy to use logging library.
+**intake** is a powerful and easy to use logging library.
 The library is designed with multiple base principles:
 
 * Be a drop-in replacement for Ruby `Logger`
@@ -12,7 +12,7 @@ The library is designed with multiple base principles:
 ## Installation
 
 ```shell
-gem install log_sinks
+gem install intake
 ```
 
 ## License

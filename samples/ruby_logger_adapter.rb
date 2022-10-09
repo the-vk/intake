@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative '../lib/log_sinks'
-require_relative '../lib/log_sinks/ruby_logger_adapter'
+require_relative '../lib/intake'
+require_relative '../lib/intake/ruby_logger_adapter'
 
-log = LogSinks::Logger[:root]
-LogSinks::EventDrain.instance.add_sink LogSinks::IOSink.new($stdout)
+log = Intake::Logger[:root]
+Intake::EventDrain.instance.add_sink Intake::IOSink.new($stdout)
 log.level = :debug
 log = log.as_ruby_logger
 
@@ -19,7 +19,7 @@ log.unknown 'unknown'
 
 log.warn { 'warn proc message' }
 
-log = LogSinks::Logger[:root].as_ruby_logger(progname: 'sample')
+log = Intake::Logger[:root].as_ruby_logger(progname: 'sample')
 
 log.debug 'debug'
 log.info 'info'
