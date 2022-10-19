@@ -17,6 +17,6 @@ RSpec.describe Intake::IOSink do
     sink = Intake::IOSink.new(io_stream)
     sink.formatter = ->(_) { 'message received' }
     sink.receive(event)
-    expect(io_stream.string).to eq 'message received'
+    expect(io_stream.string).to eq "message received\n"
   end
 end
