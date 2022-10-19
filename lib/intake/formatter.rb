@@ -9,7 +9,7 @@ module Intake
 
     def call(event)
       # rubocop:disable Layout/LineLength
-      "#{event.level.to_s[0]}, [#{event.timestamp.strftime(@timestamp_format)} ##{Process.pid}] #{event.level} -- #{event[:progname]}: #{event.message}\n"
+      "#{event.level.to_s[0]}, [#{event.timestamp.strftime(@timestamp_format)} ##{Process.pid}] #{event.level} -- #{event[:progname]}: #{event.message}"
       # rubocop:enable Layout/LineLength
     end
   end

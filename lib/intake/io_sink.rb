@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'exception_formatter'
 require_relative 'formatter'
 require_relative 'sink'
 
@@ -10,12 +11,14 @@ module Intake
       super()
       @io = io
       @formatter = ::Intake::Formatter.new
+      @exception_formatter = ::Intake::ExceptionFormatter.new
     end
 
-    attr_writer :formatter
+    attr_accessor :formatter, :exception_formatter
 
     def drain(event)
-      txt = @formatter.call(event)
+      error_message = "\n#{@exception_formatter.call(event[:error])}" unless event[:error].nil?
+      txt = "#{@formatter.call(event)}#{error_message}\n"
       @io.write(txt)
     end
   end
