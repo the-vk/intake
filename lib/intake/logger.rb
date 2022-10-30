@@ -11,31 +11,38 @@ require_relative 'repository'
 module Intake
   # Logger is a object that captures log event and forward that to event sinks.
   class Logger
+    DEFAULT_LEVEL = ::Intake::Level[:info]
     class << self
       def [](name)
-        ::Intake::Repository.instance.get_or_add(name) do |logger_name|
-          Logger.new(logger_name)
+        ::Intake::Repository.instance.get_or_add(name) do |logger_name, parent|
+          Logger.new(logger_name, parent: parent)
         end
       end
     end
 
     attr_reader :name
 
-    def initialize(name)
+    def initialize(name, parent: nil)
       validate_name(name)
 
       @name = name
-      @level = ::Intake::Level[:info]
+      @level = nil
+      @parent = parent
     end
 
     def level?(level)
-      @level.val <= level.val
+      self.level.val <= level.val
+    end
+
+    def level
+      @level || @parent&.level || DEFAULT_LEVEL
     end
 
     def level=(level)
       @level = case level
                when String, Symbol then ::Intake::Level[level.to_sym]
                when ::Intake::Level then level
+               when nil then nil
                end
     end
 

@@ -19,17 +19,16 @@ module Intake
       @store.key? canonize_name(name)
     end
 
-    def get_or_add(name)
-      name = canonize_name(name)
-      logger = @store[name]
+    def get_or_add(name, &block)
+      return nil if name.nil?
 
-      if logger.nil?
-        logger = @mutex.synchronize do
-          @store[name] = yield(name) unless @store.key?(name)
-          @store[name]
+      name = canonize_name(name)
+      unless @store.key? name
+        @mutex.synchronize do
+          create_logger_unsafe(name, &block) unless @store.key? name
         end
       end
-      logger
+      @store[name]
     end
 
     private
@@ -44,8 +43,22 @@ module Intake
       end
     end
 
+    def parent_name(name)
+      separator_rindex = name.rindex('::')
+      separator_rindex.nil? ? 'root' : name[0, separator_rindex]
+    end
+
     def module_name(mod)
       mod.name
+    end
+
+    def create_logger_unsafe(name, &block)
+      unless name == 'root'
+        parent_logger_name = parent_name(name)
+        parent_logger = @store[parent_logger_name] || create_logger_unsafe(parent_logger_name, &block)
+      end
+      @store[name] = block.call(name, parent_logger) unless @store.key?(name)
+      @store[name]
     end
   end
 end
